@@ -1,6 +1,6 @@
 # SQL Parser Benchmark Results
 
-**Last Updated**: 2026-02-07 15:15:57 UTC
+**Last Updated**: 2026-02-07 15:25:58 UTC
 
 ## Overall Accuracy
 
@@ -15,49 +15,49 @@
 
 ### Hybrid
 
-- `query12_mysql`
-- `query12_postgres`
-- `query20_mysql`
+- `alter_add_column_if_not_exists_mysql`
+- `alter_add_column_if_not_exists_postgres`
+- `create_table_with_constraints_mysql`
 
 ### sqlglot
 
-- `query10_postgres`
-- `query16_mysql`
-- `query20_mysql`
+- `create_index_with_where_postgres`
+- `create_table_with_constraints_mysql`
+- `delete_with_row_number_mysql`
 
 ### sql_metadata
 
-- `query10_postgres`
-- `query12_mysql`
-- `query12_postgres`
-- `query13_postgres`
-- `query14_postgres`
-- `query15_postgres`
-- `query16_mysql`
-- `query17_mysql`
-- `query19_postgres`
-- `query20_mysql`
-- `query8_mysql`
-- `query8_postgres`
+- `alter_add_column_if_not_exists_mysql`
+- `alter_add_column_if_not_exists_postgres`
+- `alter_add_foreign_key_mysql`
+- `alter_add_foreign_key_postgres`
+- `alter_multiple_columns_mysql`
+- `alter_with_fk_not_valid_postgres`
+- `create_index_with_where_postgres`
+- `create_simple_index_postgres`
+- `create_table_with_constraints_mysql`
+- `create_unique_index_with_where_postgres`
+- `delete_with_row_number_mysql`
+- `delete_with_using_postgres`
 
 ### sqlparse
 
-- `query10_postgres`
-- `query13_postgres`
-- `query14_postgres`
-- `query15_postgres`
-- `query16_mysql`
-- `query17_mysql`
-- `query18_mysql`
-- `query18_postgres`
-- `query19_postgres`
-- `query20_mysql`
-- `query3_mysql`
-- `query3_postgres`
-- `query4_mysql`
-- `query4_postgres`
-- `query8_mysql`
-- `query8_postgres`
+- `alter_add_foreign_key_mysql`
+- `alter_add_foreign_key_postgres`
+- `alter_multiple_columns_mysql`
+- `alter_with_fk_not_valid_postgres`
+- `create_index_with_where_postgres`
+- `create_simple_index_postgres`
+- `create_table_with_constraints_mysql`
+- `create_unique_index_with_where_postgres`
+- `delete_with_row_number_mysql`
+- `delete_with_using_postgres`
+- `insert_values_mysql`
+- `insert_values_postgres`
+- `insert_with_subquery_mysql`
+- `insert_with_subquery_postgres`
+- `update_where_mysql`
+- `update_where_postgres`
 
 
 ## Test Coverage

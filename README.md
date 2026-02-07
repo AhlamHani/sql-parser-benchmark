@@ -63,7 +63,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 uv pip install -e .
 
 # Or with pip
-pip install -r requirements.txt
+pip install .
 ```
 
 ### Run Benchmarks
