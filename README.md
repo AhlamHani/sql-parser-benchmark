@@ -106,23 +106,9 @@ sql-parser-benchmark/
 
 ## 🔬 Parsers Tested
 
-### 1. sqlglot
-- **Approach**: AST-based parsing with engine awareness
-- **Pros**: Best accuracy, handles complex queries, engine-aware
-- **Cons**: Fails on some MySQL-specific syntax (FORCE INDEX, ADD INDEX)
-- **Best for**: PostgreSQL queries, foreign key extraction
-
-### 2. sql_metadata
-- **Approach**: Regex-based parsing, engine-agnostic
-- **Pros**: Fast, handles MySQL hints well, simple API
-- **Cons**: Not engine-aware, misses FK references, limited CREATE INDEX support
-- **Best for**: MySQL queries with hints
-
-### 3. sqlparse
-- **Approach**: Tokenization-based parsing
-- **Pros**: Lightweight, pure Python
-- **Cons**: Limited table extraction, misses many edge cases
-- **Best for**: Basic queries only
+- sqlglot
+- sql_metadata
+- sqlparse
 
 ## 🧩 Test Case Format
 
