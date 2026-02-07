@@ -5,7 +5,7 @@ Benchmark comparison script that generates RESULTS.md
 import os
 from datetime import datetime
 from conftest import parse_query_file
-from parsers import SQLGlotParser, SQLMetadataParser, SQLParseParser
+from parsers import SQLGlotParser, SQLMetadataParser, SQLParseParser, HybridParser
 import sqlglot
 import sqlparse
 import importlib.metadata
@@ -42,6 +42,7 @@ def run_benchmark():
     cases = load_test_cases()
     
     parsers = {
+        'hybrid': HybridParser,
         'sqlglot': SQLGlotParser,
         'sql_metadata': SQLMetadataParser,
         'sqlparse': SQLParseParser,
@@ -132,6 +133,11 @@ def generate_markdown(results):
 - **PostgreSQL Tests**: {postgres}
 
 ## Parser Details
+
+### hybrid
+- **Approach**: Combined strategies with filtering
+- **Strengths**: Handles edge cases
+- **Weaknesses**: More complex
 
 ### sqlglot
 - **Approach**: AST-based parsing with engine awareness
