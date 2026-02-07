@@ -1,6 +1,6 @@
 # SQL Parser Benchmark Results
 
-**Last Updated**: 2026-02-07 16:12:11 UTC
+**Last Updated**: 2026-02-07 13:12:25 UTC
 
 ## Library Versions
 
