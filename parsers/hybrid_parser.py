@@ -39,6 +39,25 @@ class HybridParser:
         candidates.update(sqlglot_columns)
         candidates.update(metadata_columns)
         
+        # Check if query is DDL without column references
+        try:
+            parsed = sqlglot.parse_one(query, read=self.engine)
+            key = parsed.key.upper()
+            
+            # Skip columns for DDL that doesn't reference columns
+            if key == 'ALTER':
+                # ALTER DROP COLUMN and CREATE INDEX with WHERE do reference columns
+                if not any(x in query.upper() for x in ['DROP COLUMN', 'ADD COLUMN', 'MODIFY COLUMN']):
+                    return []
+            elif key == 'CREATE':
+                # CREATE INDEX with WHERE clause references columns
+                if 'WHERE' not in query.upper():
+                    return []
+            elif key == 'DROP':
+                return []
+        except:
+            pass
+        
         # Filter using consensus
         filtered = self._filter_column_noise(candidates, sqlglot_columns, metadata_columns)
         

@@ -21,8 +21,8 @@
 
 | Parser | Overall | Failures |
 |--------|---------|----------|
+| **hybrid** | **28/37 (75.7%)** | 9 |
 | **sql_metadata** | **26/37 (70.3%)** | 11 |
-| **hybrid** | **23/37 (62.2%)** | 14 |
 | **sqlglot** | **23/37 (62.2%)** | 14 |
 
 ## Detailed Failures
@@ -81,13 +81,11 @@
 
 ### Column Extraction
 
-#### sql_metadata
+#### hybrid
 
-- `alter_drop_column_mysql`
-- `alter_drop_column_postgres`
-- `alter_type_postgres_postgres`
-- `create_index_with_where_postgres`
-- `create_table_with_constraints_mysql`
+- `alter_drop_column_postgres_postgres`
+- `alter_multiple_columns_mysql`
+- `create_unique_index_with_where_postgres`
 - `delete_with_row_number_mysql`
 - `delete_with_using_postgres`
 - `insert_select_join_mysql`
@@ -95,16 +93,13 @@
 - `insert_with_subquery_postgres`
 - `update_join_mysql`
 
-#### hybrid
+#### sql_metadata
 
-- `alter_add_foreign_key_mysql`
-- `alter_add_foreign_key_postgres`
-- `alter_add_index_mysql`
-- `alter_drop_column_postgres_postgres`
-- `alter_multiple_columns_mysql`
-- `create_simple_index_postgres`
+- `alter_drop_column_mysql`
+- `alter_drop_column_postgres`
+- `alter_type_postgres_postgres`
+- `create_index_with_where_postgres`
 - `create_table_with_constraints_mysql`
-- `create_unique_index_with_where_postgres`
 - `delete_with_row_number_mysql`
 - `delete_with_using_postgres`
 - `insert_select_join_mysql`
