@@ -135,6 +135,14 @@ class HybridParser:
         columns = set()
         try:
             parsed = sqlglot.parse_one(query, read=self.engine)
+            
+            # For INSERT with column list, get from Schema node
+            for schema in parsed.find_all(sqlglot.exp.Schema):
+                for expr in schema.expressions:
+                    if isinstance(expr, sqlglot.exp.Identifier):
+                        columns.add(expr.name)
+            
+            # For other queries, get from Column nodes
             for col in parsed.find_all(sqlglot.exp.Column):
                 if col.name:
                     columns.add(col.name)

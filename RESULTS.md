@@ -97,6 +97,8 @@
 
 #### hybrid
 
+- `alter_add_foreign_key_mysql`
+- `alter_add_foreign_key_postgres`
 - `alter_add_index_mysql`
 - `alter_drop_column_postgres_postgres`
 - `alter_multiple_columns_mysql`
@@ -106,14 +108,14 @@
 - `delete_with_row_number_mysql`
 - `delete_with_using_postgres`
 - `insert_select_join_mysql`
-- `insert_values_mysql`
-- `insert_values_postgres`
 - `insert_with_subquery_mysql`
 - `insert_with_subquery_postgres`
 - `update_join_mysql`
 
 #### sqlglot
 
+- `alter_add_foreign_key_mysql`
+- `alter_add_foreign_key_postgres`
 - `alter_add_index_mysql`
 - `alter_drop_column_postgres_postgres`
 - `alter_multiple_columns_mysql`
@@ -123,8 +125,6 @@
 - `delete_with_row_number_mysql`
 - `delete_with_using_postgres`
 - `insert_select_join_mysql`
-- `insert_values_mysql`
-- `insert_values_postgres`
 - `insert_with_subquery_mysql`
 - `insert_with_subquery_postgres`
 - `update_join_mysql`

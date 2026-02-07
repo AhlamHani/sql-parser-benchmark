@@ -17,7 +17,19 @@ class SQLGlotParser:
     def extract_columns(self, query):
         try:
             parsed = sqlglot.parse_one(query, read=self.engine)
-            columns = [col.name for col in parsed.find_all(sqlglot.exp.Column) if col.name]
-            return sorted(set(columns))
+            columns = set()
+            
+            # For INSERT with column list, get from Schema node
+            for schema in parsed.find_all(sqlglot.exp.Schema):
+                for expr in schema.expressions:
+                    if isinstance(expr, sqlglot.exp.Identifier):
+                        columns.add(expr.name)
+            
+            # For other queries, get from Column nodes
+            for col in parsed.find_all(sqlglot.exp.Column):
+                if col.name:
+                    columns.add(col.name)
+            
+            return sorted(columns)
         except Exception:
             return []
