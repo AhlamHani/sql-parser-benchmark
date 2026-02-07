@@ -6,6 +6,9 @@ import os
 from datetime import datetime
 from conftest import parse_query_file
 from parsers import SQLGlotParser, SQLMetadataParser, SQLParseParser
+import sqlglot
+import sqlparse
+import importlib.metadata
 
 
 def load_test_cases():
@@ -84,6 +87,14 @@ def generate_markdown(results):
     md = f"""# SQL Parser Benchmark Results
 
 **Last Updated**: {timestamp}
+
+## Library Versions
+
+| Library | Version |
+|---------|----------|
+| sqlglot | {sqlglot.__version__} |
+| sql-metadata | {importlib.metadata.version('sql-metadata')} |
+| sqlparse | {sqlparse.__version__} |
 
 ## Overall Accuracy
 

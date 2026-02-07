@@ -1,6 +1,14 @@
 # SQL Parser Benchmark Results
 
-**Last Updated**: 2026-02-07 15:25:58 UTC
+**Last Updated**: 2026-02-07 15:47:03 UTC
+
+## Library Versions
+
+| Library | Version |
+|---------|----------|
+| sqlglot | 28.10.0 |
+| sql-metadata | 2.19.0 |
+| sqlparse | 0.5.5 |
 
 ## Overall Accuracy
 
@@ -37,12 +45,12 @@
 
 - `alter_add_foreign_key_mysql`
 - `alter_add_foreign_key_postgres`
-- `alter_multiple_columns_mysql`
 - `alter_with_fk_not_valid_postgres`
 - `create_index_with_where_postgres`
 - `create_simple_index_postgres`
 - `create_table_with_constraints_mysql`
 - `create_unique_index_with_where_postgres`
+- `delete_with_force_index_mysql`
 - `delete_with_row_number_mysql`
 - `delete_with_using_postgres`
 - `insert_values_mysql`
@@ -63,7 +71,7 @@
 
 ### sqlglot
 - **Approach**: AST-based parsing with engine awareness
-- **Strengths**: Best accuracy, handles complex queries
+- **Strengths**: Best single parser, handles complex queries
 - **Weaknesses**: Fails on some MySQL-specific syntax
 
 ### sql_metadata
