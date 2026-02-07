@@ -54,14 +54,15 @@ This benchmark evaluates how well different SQL parsers can extract table names 
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/sql-parser-benchmark.git
+git clone https://github.com/AhlamHani/sql-parser-benchmark.git
 cd sql-parser-benchmark
 
-# Create virtual environment
-python3 -m venv .venv
+# Install with uv (recommended)
+uv venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -e .
 
-# Install dependencies
+# Or with pip
 pip install -r requirements.txt
 ```
 
@@ -69,14 +70,14 @@ pip install -r requirements.txt
 
 ```bash
 # Run all benchmarks
-python -m pytest tests/ -v
+pytest tests/ -v
 
 # Run comparison report
 python tests/benchmark_comparison.py
 
 # Run specific engine tests
-python -m pytest tests/ -k mysql
-python -m pytest tests/ -k postgres
+pytest tests/ -k mysql
+pytest tests/ -k postgres
 ```
 
 ## 📁 Project Structure
