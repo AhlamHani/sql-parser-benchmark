@@ -1,5 +1,4 @@
 """Hybrid parser combining multiple strategies."""
-import re
 import sqlglot
 from sql_metadata import Parser as SQLMetadataParser
 import sqlparse
@@ -23,8 +22,11 @@ class HybridParser:
         candidates.update(metadata_tables)
         candidates.update(sqlparse_tables)
         
-        # Filter using parser consensus and context
-        filtered = self._filter_noise(candidates, sqlglot_tables, metadata_tables, sqlparse_tables, query)
+        # Get aliases from sqlglot AST
+        aliases = self._extract_aliases(query)
+        
+        # Filter using parser consensus and AST analysis
+        filtered = self._filter_noise(candidates, sqlglot_tables, metadata_tables, sqlparse_tables, aliases)
         
         return sorted(list(filtered))
     
@@ -48,6 +50,11 @@ class HybridParser:
             for t in parsed.find_all(sqlglot.exp.Table):
                 if t.name:
                     tables.add(t.name)
+                # Also add schema/catalog if present (they are strings, not objects)
+                if hasattr(t, 'db') and t.db:
+                    tables.add(t.db)
+                if hasattr(t, 'catalog') and t.catalog:
+                    tables.add(t.catalog)
         except:
             pass
         return tables
@@ -91,8 +98,32 @@ class HybridParser:
             pass
         return tables
     
-    def _filter_noise(self, candidates, sqlglot_tables, metadata_tables, sqlparse_tables, query):
-        """Filter using parser consensus and context analysis."""
+    def _extract_aliases(self, query):
+        """Extract table aliases using sqlglot AST."""
+        aliases = set()
+        try:
+            parsed = sqlglot.parse_one(query, read=self.engine)
+            
+            # Find all table aliases
+            for table_expr in parsed.find_all(sqlglot.exp.Table):
+                if table_expr.alias:
+                    aliases.add(table_expr.alias)
+            
+            # Find subquery aliases
+            for subquery in parsed.find_all(sqlglot.exp.Subquery):
+                if subquery.alias:
+                    aliases.add(subquery.alias)
+            
+            # Find CTE aliases
+            for cte in parsed.find_all(sqlglot.exp.CTE):
+                if cte.alias:
+                    aliases.add(cte.alias)
+        except:
+            pass
+        return aliases
+    
+    def _filter_noise(self, candidates, sqlglot_tables, metadata_tables, sqlparse_tables, aliases):
+        """Filter using parser consensus and AST analysis."""
         keywords = {
             'ADD', 'RESTRICT', 'CASCADE', 'IF', 'NOT', 'EXISTS', 'NULL', 'DEFAULT',
             'CURRENT_TIMESTAMP', 'ON', 'UPDATE', 'DELETE', 'SET', 'WHERE', 'AND', 'OR',
@@ -105,11 +136,16 @@ class HybridParser:
         
         filtered = set()
         for t in candidates:
+            # Skip keywords and operator classes
             if t.upper() in keywords or t in opclasses:
                 continue
             if ' ' in t or t.upper().startswith('IF '):
                 continue
             if len(t) == 1:
+                continue
+            
+            # Skip if it's a known alias
+            if t in aliases:
                 continue
             
             # Parser consensus: count how many parsers found it
@@ -120,23 +156,10 @@ class HybridParser:
                 filtered.add(t)
                 continue
             
-            # If only 1 parser found it, apply stricter checks
-            if found_by == 1:
-                # Skip if it's a subquery alias
-                if re.search(r'\)\s+(AS\s+)?' + re.escape(t) + r'\b', query, re.IGNORECASE):
-                    continue
-                # Always keep if found by sqlglot (most reliable)
-                if t in sqlglot_tables:
-                    filtered.add(t)
-                    continue
-                # Keep if has schema prefix
-                if re.search(r'\w+\.' + re.escape(t) + r'\b', query, re.IGNORECASE):
-                    filtered.add(t)
-                    continue
-                # Keep if appears after table keywords
-                if re.search(r'\b(FROM|JOIN|INTO|UPDATE|TABLE|ON)\s+' + re.escape(t) + r'\b', query, re.IGNORECASE):
-                    filtered.add(t)
-                    continue
+            # If only 1 parser found it, trust sqlglot
+            if found_by == 1 and t in sqlglot_tables:
+                filtered.add(t)
+                continue
         
         return filtered
     

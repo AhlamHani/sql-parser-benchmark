@@ -1,6 +1,6 @@
 # SQL Parser Benchmark Results
 
-**Last Updated**: 2026-02-07 16:06:46 UTC
+**Last Updated**: 2026-02-07 16:11:27 UTC
 
 ## Library Versions
 
@@ -14,16 +14,12 @@
 
 | Parser | Overall | MySQL | PostgreSQL | Failures |
 |--------|---------|-------|------------|----------|
-| **hybrid** | **28/29 (96.6%)** | 14/15 (93.3%) | 14/14 (100.0%) | 1 |
+| **hybrid** | **29/29 (100.0%)** | 15/15 (100.0%) | 14/14 (100.0%) | 0 |
 | **sqlglot** | **26/29 (89.7%)** | 13/15 (86.7%) | 13/14 (92.9%) | 3 |
 | **sql_metadata** | **17/29 (58.6%)** | 10/15 (66.7%) | 7/14 (50.0%) | 12 |
 | **sqlparse** | **13/29 (44.8%)** | 8/15 (53.3%) | 5/14 (35.7%) | 16 |
 
 ## Detailed Failures
-
-### hybrid
-
-- `delete_with_row_number_mysql`
 
 ### sqlglot
 
