@@ -36,6 +36,10 @@ class HybridParser:
         try:
             parsed = sqlglot.parse_one(query, read=self.engine)
             
+            if parsed.key.upper() == "DROP":
+                if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "INDEX":
+                    return tables
+            
             if parsed.key.upper() == "ALTER":
                 if hasattr(parsed, 'this') and parsed.this:
                     tables.add(parsed.this.name)
@@ -44,13 +48,27 @@ class HybridParser:
                         tables.add(t.name)
                 return tables
             
-            if parsed.key.upper() == "CREATE" and hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "TABLE":
-                return tables
+            if parsed.key.upper() == "CREATE":
+                if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "TABLE":
+                    return tables
+                if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "INDEX":
+                    for idx in parsed.find_all(sqlglot.exp.Index):
+                        for t in idx.find_all(sqlglot.exp.Table):
+                            if t.name:
+                                tables.add(t.name)
+                    return tables
+            
+            if parsed.key.upper() == "COMMAND":
+                if 'CREATE' in query.upper() and 'INDEX' in query.upper() and 'ON' in query.upper():
+                    import re
+                    match = re.search(r'\bON\s+([`"]?\w+[`"]?)', query, re.IGNORECASE)
+                    if match:
+                        tables.add(match.group(1).strip('`"'))
+                    return tables
             
             for t in parsed.find_all(sqlglot.exp.Table):
                 if t.name:
                     tables.add(t.name)
-                # Also add schema/catalog if present (they are strings, not objects)
                 if hasattr(t, 'db') and t.db:
                     tables.add(t.db)
                 if hasattr(t, 'catalog') and t.catalog:
