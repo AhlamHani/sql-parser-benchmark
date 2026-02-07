@@ -1,6 +1,6 @@
 # SQL Parser Benchmark
 
-[![Tests](https://github.com/YOUR_USERNAME/sql-parser-benchmark/actions/workflows/benchmark.yml/badge.svg)](https://github.com/YOUR_USERNAME/sql-parser-benchmark/actions/workflows/benchmark.yml)
+[![Tests](https://github.com/AhlamHani/sql-parser-benchmark/actions/workflows/benchmark.yml/badge.svg)](https://github.com/AhlamHani/sql-parser-benchmark/actions/workflows/benchmark.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -80,7 +80,7 @@ sql-parser-benchmark/
 ├── tests/
 │   ├── fixtures/
 │   │   └── test_cases/
-│   │       ├── select_basic/
+│   │       ├── basic_select/
 │   │       │   ├── mysql.sql
 │   │       │   └── postgres.sql
 │   │       ├── alter_add_column/
@@ -94,12 +94,12 @@ sql-parser-benchmark/
 │   ├── __init__.py
 │   ├── sqlglot_parser.py
 │   ├── sql_metadata_parser.py
-│   ├── sqlparse_parser.py
-│   └── hybrid_parser.py
+│   └── sqlparse_parser.py
 ├── .github/
 │   └── workflows/
 │       └── benchmark.yml         # CI/CD pipeline
-├── requirements.txt
+├── pyproject.toml
+├── uv.lock
 ├── README.md
 └── RESULTS.md                    # Auto-generated results
 ```
@@ -107,25 +107,22 @@ sql-parser-benchmark/
 ## 🔬 Parsers Tested
 
 ### 1. sqlglot
-- **Pros**: Engine-aware parsing, AST-based, handles complex queries
+- **Approach**: AST-based parsing with engine awareness
+- **Pros**: Best accuracy, handles complex queries, engine-aware
 - **Cons**: Fails on some MySQL-specific syntax (FORCE INDEX, ADD INDEX)
 - **Best for**: PostgreSQL queries, foreign key extraction
 
 ### 2. sql_metadata
+- **Approach**: Regex-based parsing, engine-agnostic
 - **Pros**: Fast, handles MySQL hints well, simple API
 - **Cons**: Not engine-aware, misses FK references, limited CREATE INDEX support
 - **Best for**: MySQL queries with hints
 
 ### 3. sqlparse
+- **Approach**: Tokenization-based parsing
 - **Pros**: Lightweight, pure Python
 - **Cons**: Limited table extraction, misses many edge cases
 - **Best for**: Basic queries only
-
-### 4. Hybrid (Recommended)
-- **Approach**: Combines sqlglot + sql_metadata with keyword filtering
-- **Pros**: Best accuracy, handles both engines, filters false positives
-- **Cons**: Slightly slower, more complex
-- **Best for**: Production use cases requiring high accuracy
 
 ## 🧩 Test Case Format
 
@@ -135,7 +132,6 @@ Each test case is organized by query type with engine-specific files:
 /*
 tables = ['users', 'orders']
 columns = ['user_id', 'order_id']
-expected-parsers = ['sqlglot', 'sql_metadata']
 engine = 'mysql'
 */
 

@@ -6,18 +6,11 @@
 
 | Parser | Overall | MySQL | PostgreSQL | Failures |
 |--------|---------|-------|------------|----------|
-| **Hybrid** | **26/29 (89.7%)** | 13/15 (86.7%) | 13/14 (92.9%) | 3 |
 | **sqlglot** | **26/29 (89.7%)** | 13/15 (86.7%) | 13/14 (92.9%) | 3 |
 | **sql_metadata** | **17/29 (58.6%)** | 10/15 (66.7%) | 7/14 (50.0%) | 12 |
 | **sqlparse** | **13/29 (44.8%)** | 8/15 (53.3%) | 5/14 (35.7%) | 16 |
 
 ## Detailed Failures
-
-### Hybrid
-
-- `alter_add_column_if_not_exists_mysql`
-- `alter_add_column_if_not_exists_postgres`
-- `create_table_with_constraints_mysql`
 
 ### sqlglot
 
@@ -68,14 +61,9 @@
 
 ## Parser Details
 
-### Hybrid Parser
-- **Approach**: Combines sqlglot + sql_metadata with keyword filtering
-- **Strengths**: Highest accuracy, handles both engines well
-- **Weaknesses**: Slightly more complex
-
 ### sqlglot
 - **Approach**: AST-based parsing with engine awareness
-- **Strengths**: Best single parser, handles complex queries
+- **Strengths**: Best accuracy, handles complex queries
 - **Weaknesses**: Fails on some MySQL-specific syntax
 
 ### sql_metadata
