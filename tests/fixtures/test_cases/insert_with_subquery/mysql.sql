@@ -1,16 +1,16 @@
 /*
-tables = ['inquiries', 'payments', 'tmp_stale_inquiries']
+tables = ['requests', 'payments', 'stale_requests']
 columns = []
 expected-parsers = ['sqlglot']
 engine = 'mysql'
 */
 
-INSERT INTO tmp_stale_inquiries
+INSERT INTO stale_requests
 SELECT i.transaction_id
-FROM inquiries i
+FROM requests i
 WHERE i.created_at < now() - interval '6 months'
   AND NOT EXISTS (
     SELECT 1
     FROM payments p
-    WHERE p.inquiry_id = i.transaction_id
+    WHERE p.request_id = i.transaction_id
     )

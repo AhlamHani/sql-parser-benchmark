@@ -1,10 +1,10 @@
 /*
-tables = ['transaction']
+tables = ['transactions']
 columns = []
 expected-parsers = ['sqlglot', 'sql_metadata']
 engine = 'mysql'
 */
 
-ALTER TABLE transaction
-    ADD COLUMN source_entity_id bigint unsigned DEFAULT NULL AFTER description,
-    ADD COLUMN source_entity_type tinyint unsigned DEFAULT NULL AFTER source_entity_id
+ALTER TABLE transactions
+    ADD COLUMN entity_id bigint unsigned DEFAULT NULL AFTER description,
+    ADD COLUMN entity_type tinyint unsigned DEFAULT NULL AFTER entity_id

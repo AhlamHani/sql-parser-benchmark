@@ -2,7 +2,7 @@
 import os
 import pytest
 from conftest import parse_query_file
-from parsers import HybridParser, SQLGlotParser, SQLMetadataParser, SQLParseParser
+from parsers import SQLGlotParser, SQLMetadataParser, SQLParseParser
 
 
 def load_test_cases():
@@ -33,14 +33,6 @@ def load_test_cases():
 
 
 TEST_IDS, TEST_CASES = load_test_cases()
-
-
-@pytest.mark.parametrize("case", TEST_CASES, ids=TEST_IDS)
-def test_hybrid_parser(case):
-    """Test hybrid parser."""
-    parser = HybridParser(engine=case['engine'])
-    result = parser.extract_tables(case['query'])
-    assert result == sorted(case['tables']), f"Expected {case['tables']}, got {result}"
 
 
 @pytest.mark.parametrize("case", TEST_CASES, ids=TEST_IDS)

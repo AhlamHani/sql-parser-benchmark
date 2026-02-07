@@ -1,22 +1,22 @@
 /*
-tables = ['captain_performance', 'shift_adherence_period']
+tables = ['performance', 'adherence_records']
 columns = []
 expected-parsers = ['sqlglot']
 engine = 'mysql'
 */
 
-DELETE sap
-FROM captain_performance.shift_adherence_period sap
+DELETE sar
+FROM performance.adherence_records sar
 JOIN (
     SELECT id
     FROM (
         SELECT 
             id,
             ROW_NUMBER() OVER (
-                PARTITION BY captain_shift_adherence_id, period_start_timestamp
+                PARTITION BY shift_adherence_id, period_start_timestamp
                 ORDER BY TIMESTAMPDIFF(SECOND, period_start_timestamp, period_end_timestamp) DESC
             ) AS row_num
-        FROM captain_performance.shift_adherence_period
+        FROM performance.adherence_records
     ) ranked
     WHERE row_num > 1
-) duplicates ON sap.id = duplicates.id
+) duplicates ON sar.id = duplicates.id

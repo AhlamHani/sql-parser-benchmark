@@ -1,13 +1,13 @@
 /*
-tables = ['customization_group', 'customization_group_template']
+tables = ['config_groups', 'config_templates']
 columns = []
 expected-parsers = ['sqlglot']
 engine = 'postgres'
 */
 
-ALTER TABLE customization_group
-    ADD CONSTRAINT customization_group_template_id_fk
-        FOREIGN KEY (customization_group_template_id)
-            REFERENCES customization_group_template
+ALTER TABLE config_groups
+    ADD CONSTRAINT config_template_id_fk
+        FOREIGN KEY (config_template_id)
+            REFERENCES config_templates
             ON UPDATE RESTRICT ON DELETE RESTRICT
             NOT VALID

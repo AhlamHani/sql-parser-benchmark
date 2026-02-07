@@ -1,8 +1,8 @@
 /*
-tables = ['customization_group']
+tables = ['config_groups']
 columns = []
 expected-parsers = ['sql_metadata', 'sqlglot']
 engine = 'postgres'
 */
 
-ALTER TABLE customization_group ADD COLUMN IF NOT EXISTS customization_group_template_id BIGINT
+ALTER TABLE config_groups ADD COLUMN IF NOT EXISTS config_template_id BIGINT

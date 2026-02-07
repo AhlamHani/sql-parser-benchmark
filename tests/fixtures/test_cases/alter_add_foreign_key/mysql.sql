@@ -1,8 +1,8 @@
 /*
-tables = ['hdl_merchants', 'hdl_zone']
+tables = ['merchants', 'zones']
 columns = []
 expected-parsers = ['sqlglot']
 engine = 'mysql'
 */
 
-ALTER TABLE hdl_merchants ADD CONSTRAINT fk_hdl_id FOREIGN KEY (hdl_id) REFERENCES hdl_zone (id);
+ALTER TABLE merchants ADD CONSTRAINT fk_zone_id FOREIGN KEY (zone_id) REFERENCES zones (id);

@@ -1,9 +1,9 @@
 /*
-tables = ['options_template']
+tables = ['option_templates']
 columns = []
 expected-parsers = ['sqlglot']
 engine = 'postgres'
 */
 
-create index if not exists options_template_group_template_id_index
-    on options_template (group_template_id)
+create index if not exists option_template_config_template_id_index
+    on option_templates (config_template_id)
