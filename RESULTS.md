@@ -12,27 +12,34 @@
 
 | Parser | Overall | MySQL | PostgreSQL | Failures |
 |--------|---------|-------|------------|----------|
-| **hybrid** | **29/29 (100.0%)** | 15/15 (100.0%) | 14/14 (100.0%) | 0 |
-| **sqlglot** | **26/29 (89.7%)** | 13/15 (86.7%) | 13/14 (92.9%) | 3 |
-| **sql_metadata** | **17/29 (58.6%)** | 10/15 (66.7%) | 7/14 (50.0%) | 12 |
-| **sqlparse** | **13/29 (44.8%)** | 8/15 (53.3%) | 5/14 (35.7%) | 16 |
+| **hybrid** | **37/37 (100.0%)** | 19/19 (100.0%) | 18/18 (100.0%) | 0 |
+| **sqlglot** | **30/37 (81.1%)** | 15/19 (78.9%) | 15/18 (83.3%) | 7 |
+| **sql_metadata** | **22/37 (59.5%)** | 12/19 (63.2%) | 10/18 (55.6%) | 15 |
+| **sqlparse** | **18/37 (48.6%)** | 9/19 (47.4%) | 9/18 (50.0%) | 19 |
 
 ## Detailed Failures
 
 ### sqlglot
 
+- `alter_modify_column_mysql`
+- `alter_type_postgres_postgres`
+- `create_index_algorithm_mysql`
 - `create_index_with_where_postgres`
 - `create_table_with_constraints_mysql`
 - `delete_with_row_number_mysql`
+- `drop_multiple_indexes_postgres`
 
 ### sql_metadata
 
 - `alter_add_column_if_not_exists_mysql`
 - `alter_add_column_if_not_exists_postgres`
+- `alter_add_columns_postgres_postgres`
 - `alter_add_foreign_key_mysql`
 - `alter_add_foreign_key_postgres`
+- `alter_modify_column_mysql`
 - `alter_multiple_columns_mysql`
 - `alter_with_fk_not_valid_postgres`
+- `create_index_algorithm_mysql`
 - `create_index_with_where_postgres`
 - `create_simple_index_postgres`
 - `create_table_with_constraints_mysql`
@@ -45,6 +52,7 @@
 - `alter_add_foreign_key_mysql`
 - `alter_add_foreign_key_postgres`
 - `alter_with_fk_not_valid_postgres`
+- `create_index_algorithm_mysql`
 - `create_index_with_where_postgres`
 - `create_simple_index_postgres`
 - `create_table_with_constraints_mysql`
@@ -52,10 +60,12 @@
 - `delete_with_force_index_mysql`
 - `delete_with_row_number_mysql`
 - `delete_with_using_postgres`
+- `insert_select_join_mysql`
 - `insert_values_mysql`
 - `insert_values_postgres`
 - `insert_with_subquery_mysql`
 - `insert_with_subquery_postgres`
+- `update_join_mysql`
 - `update_where_mysql`
 - `update_where_postgres`
 
