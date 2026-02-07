@@ -1,5 +1,5 @@
 /*
-tables = ['role_permissions', 'roles', 'permissions']
+tables = ['permissions', 'role_permissions', 'roles']
 columns = []
 engine = 'mysql'
 */

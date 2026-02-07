@@ -47,35 +47,57 @@ def run_benchmark():
         'sqlparse': SQLParseParser,
     }
     
-    results = {name: {'correct': 0, 'total': 0, 'mysql': 0, 'postgres': 0, 'mysql_correct': 0, 'postgres_correct': 0, 'failures': []} 
-               for name in parsers}
+    results = {name: {
+        'tables_correct': 0, 'tables_total': 0,
+        'columns_correct': 0, 'columns_total': 0,
+        'mysql': 0, 'postgres': 0,
+        'mysql_correct': 0, 'postgres_correct': 0,
+        'table_failures': [], 'column_failures': []
+    } for name in parsers}
     
     for case in cases:
-        expected = sorted(case['tables'])
+        expected_tables = sorted(case['tables'])
+        expected_columns = sorted(case['columns'])
         engine = case['engine']
         
         for parser_name, ParserClass in parsers.items():
             parser = ParserClass(engine=engine)
+            
+            # Test tables
             try:
-                result = parser.extract_tables(case['query'])
-                results[parser_name]['total'] += 1
+                result_tables = parser.extract_tables(case['query'])
+                results[parser_name]['tables_total'] += 1
                 
                 if engine == 'mysql':
                     results[parser_name]['mysql'] += 1
-                    if result == expected:
+                    if result_tables == expected_tables:
                         results[parser_name]['mysql_correct'] += 1
                 else:
                     results[parser_name]['postgres'] += 1
-                    if result == expected:
+                    if result_tables == expected_tables:
                         results[parser_name]['postgres_correct'] += 1
                 
-                if result == expected:
-                    results[parser_name]['correct'] += 1
+                if result_tables == expected_tables:
+                    results[parser_name]['tables_correct'] += 1
                 else:
-                    results[parser_name]['failures'].append(case['test_id'])
+                    results[parser_name]['table_failures'].append(case['test_id'])
             except Exception as e:
-                results[parser_name]['total'] += 1
-                results[parser_name]['failures'].append(f"{case['test_id']} (error: {str(e)[:50]})")
+                results[parser_name]['tables_total'] += 1
+                results[parser_name]['table_failures'].append(f"{case['test_id']} (error)")
+            
+            # Test columns (only for parsers that support it)
+            if hasattr(parser, 'extract_columns'):
+                try:
+                    result_columns = parser.extract_columns(case['query'])
+                    results[parser_name]['columns_total'] += 1
+                    
+                    if result_columns == expected_columns:
+                        results[parser_name]['columns_correct'] += 1
+                    else:
+                        results[parser_name]['column_failures'].append(case['test_id'])
+                except Exception as e:
+                    results[parser_name]['columns_total'] += 1
+                    results[parser_name]['column_failures'].append(f"{case['test_id']} (error)")
     
     return results
 
@@ -92,31 +114,51 @@ def generate_markdown(results):
 | sql-metadata | {importlib.metadata.version('sql-metadata')} |
 | sqlparse | {sqlparse.__version__} |
 
-## Overall Accuracy
+## Table Extraction Accuracy
 
 | Parser | Overall | MySQL | PostgreSQL | Failures |
 |--------|---------|-------|------------|----------|
 """
     
-    # Sort by overall accuracy
-    sorted_results = sorted(results.items(), key=lambda x: x[1]['correct'], reverse=True)
+    # Sort by table accuracy
+    sorted_results = sorted(results.items(), key=lambda x: x[1]['tables_correct'], reverse=True)
     
     for parser_name, stats in sorted_results:
-        overall_pct = (stats['correct'] / stats['total'] * 100) if stats['total'] > 0 else 0
+        overall_pct = (stats['tables_correct'] / stats['tables_total'] * 100) if stats['tables_total'] > 0 else 0
         mysql_pct = (stats['mysql_correct'] / stats['mysql'] * 100) if stats['mysql'] > 0 else 0
         postgres_pct = (stats['postgres_correct'] / stats['postgres'] * 100) if stats['postgres'] > 0 else 0
         
-        md += f"| **{parser_name}** | **{stats['correct']}/{stats['total']} ({overall_pct:.1f}%)** | "
+        md += f"| **{parser_name}** | **{stats['tables_correct']}/{stats['tables_total']} ({overall_pct:.1f}%)** | "
         md += f"{stats['mysql_correct']}/{stats['mysql']} ({mysql_pct:.1f}%) | "
         md += f"{stats['postgres_correct']}/{stats['postgres']} ({postgres_pct:.1f}%) | "
-        md += f"{len(stats['failures'])} |\n"
+        md += f"{len(stats['table_failures'])} |\n"
     
-    md += "\n## Detailed Failures\n\n"
+    md += "\n## Column Extraction Accuracy\n\n| Parser | Overall | Failures |\n|--------|---------|----------|\n"
+    
+    # Sort by column accuracy
+    sorted_by_columns = sorted(results.items(), key=lambda x: x[1]['columns_correct'], reverse=True)
+    
+    for parser_name, stats in sorted_by_columns:
+        if stats['columns_total'] > 0:
+            col_pct = (stats['columns_correct'] / stats['columns_total'] * 100)
+            md += f"| **{parser_name}** | **{stats['columns_correct']}/{stats['columns_total']} ({col_pct:.1f}%)** | "
+            md += f"{len(stats['column_failures'])} |\n"
+    
+    md += "\n## Detailed Failures\n\n### Table Extraction\n\n"
     
     for parser_name, stats in sorted_results:
-        if stats['failures']:
-            md += f"### {parser_name}\n\n"
-            for failure in stats['failures']:
+        if stats['table_failures']:
+            md += f"#### {parser_name}\n\n"
+            for failure in stats['table_failures']:
+                md += f"- `{failure}`\n"
+            md += "\n"
+    
+    md += "### Column Extraction\n\n"
+    
+    for parser_name, stats in sorted_by_columns:
+        if stats['column_failures']:
+            md += f"#### {parser_name}\n\n"
+            for failure in stats['column_failures']:
                 md += f"- `{failure}`\n"
             md += "\n"
     
@@ -133,10 +175,16 @@ def main():
     results = run_benchmark()
     
     # Print to console
-    print("\nResults:")
-    for parser_name, stats in sorted(results.items(), key=lambda x: x[1]['correct'], reverse=True):
-        accuracy = (stats['correct'] / stats['total'] * 100) if stats['total'] > 0 else 0
-        print(f"  {parser_name:15s}: {stats['correct']:2d}/{stats['total']:2d} ({accuracy:5.1f}%)")
+    print("\nTable Extraction Results:")
+    for parser_name, stats in sorted(results.items(), key=lambda x: x[1]['tables_correct'], reverse=True):
+        accuracy = (stats['tables_correct'] / stats['tables_total'] * 100) if stats['tables_total'] > 0 else 0
+        print(f"  {parser_name:15s}: {stats['tables_correct']:2d}/{stats['tables_total']:2d} ({accuracy:5.1f}%)")
+    
+    print("\nColumn Extraction Results:")
+    for parser_name, stats in sorted(results.items(), key=lambda x: x[1]['columns_correct'], reverse=True):
+        if stats['columns_total'] > 0:
+            accuracy = (stats['columns_correct'] / stats['columns_total'] * 100)
+            print(f"  {parser_name:15s}: {stats['columns_correct']:2d}/{stats['columns_total']:2d} ({accuracy:5.1f}%)")
     
     # Generate markdown
     md_content = generate_markdown(results)

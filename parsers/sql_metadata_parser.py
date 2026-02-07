@@ -13,3 +13,11 @@ class SQLMetadataParser:
             return sorted(set(tables))
         except Exception:
             return []
+    
+    def extract_columns(self, query):
+        try:
+            parser = Parser(query)
+            columns = [col.split('.')[-1] for col in parser.columns]
+            return sorted(set(columns))
+        except Exception:
+            return []

@@ -13,3 +13,11 @@ class SQLGlotParser:
             return sorted(set(tables))
         except Exception:
             return []
+    
+    def extract_columns(self, query):
+        try:
+            parsed = sqlglot.parse_one(query, read=self.engine)
+            columns = [col.name for col in parsed.find_all(sqlglot.exp.Column) if col.name]
+            return sorted(set(columns))
+        except Exception:
+            return []

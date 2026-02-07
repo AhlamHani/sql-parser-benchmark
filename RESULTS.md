@@ -8,7 +8,7 @@
 | sql-metadata | 2.19.0 |
 | sqlparse | 0.5.5 |
 
-## Overall Accuracy
+## Table Extraction Accuracy
 
 | Parser | Overall | MySQL | PostgreSQL | Failures |
 |--------|---------|-------|------------|----------|
@@ -17,9 +17,19 @@
 | **sql_metadata** | **22/37 (59.5%)** | 12/19 (63.2%) | 10/18 (55.6%) | 15 |
 | **sqlparse** | **18/37 (48.6%)** | 9/19 (47.4%) | 9/18 (50.0%) | 19 |
 
+## Column Extraction Accuracy
+
+| Parser | Overall | Failures |
+|--------|---------|----------|
+| **sql_metadata** | **26/37 (70.3%)** | 11 |
+| **hybrid** | **23/37 (62.2%)** | 14 |
+| **sqlglot** | **23/37 (62.2%)** | 14 |
+
 ## Detailed Failures
 
-### sqlglot
+### Table Extraction
+
+#### sqlglot
 
 - `alter_modify_column_mysql`
 - `alter_type_postgres_postgres`
@@ -29,7 +39,7 @@
 - `delete_with_row_number_mysql`
 - `drop_multiple_indexes_postgres`
 
-### sql_metadata
+#### sql_metadata
 
 - `alter_add_column_if_not_exists_mysql`
 - `alter_add_column_if_not_exists_postgres`
@@ -47,7 +57,7 @@
 - `delete_with_row_number_mysql`
 - `delete_with_using_postgres`
 
-### sqlparse
+#### sqlparse
 
 - `alter_add_foreign_key_mysql`
 - `alter_add_foreign_key_postgres`
@@ -68,6 +78,56 @@
 - `update_join_mysql`
 - `update_where_mysql`
 - `update_where_postgres`
+
+### Column Extraction
+
+#### sql_metadata
+
+- `alter_drop_column_mysql`
+- `alter_drop_column_postgres`
+- `alter_type_postgres_postgres`
+- `create_index_with_where_postgres`
+- `create_table_with_constraints_mysql`
+- `delete_with_row_number_mysql`
+- `delete_with_using_postgres`
+- `insert_select_join_mysql`
+- `insert_with_subquery_mysql`
+- `insert_with_subquery_postgres`
+- `update_join_mysql`
+
+#### hybrid
+
+- `alter_add_index_mysql`
+- `alter_drop_column_postgres_postgres`
+- `alter_multiple_columns_mysql`
+- `create_simple_index_postgres`
+- `create_table_with_constraints_mysql`
+- `create_unique_index_with_where_postgres`
+- `delete_with_row_number_mysql`
+- `delete_with_using_postgres`
+- `insert_select_join_mysql`
+- `insert_values_mysql`
+- `insert_values_postgres`
+- `insert_with_subquery_mysql`
+- `insert_with_subquery_postgres`
+- `update_join_mysql`
+
+#### sqlglot
+
+- `alter_add_index_mysql`
+- `alter_drop_column_postgres_postgres`
+- `alter_multiple_columns_mysql`
+- `create_simple_index_postgres`
+- `create_table_with_constraints_mysql`
+- `create_unique_index_with_where_postgres`
+- `delete_with_row_number_mysql`
+- `delete_with_using_postgres`
+- `insert_select_join_mysql`
+- `insert_values_mysql`
+- `insert_values_postgres`
+- `insert_with_subquery_mysql`
+- `insert_with_subquery_postgres`
+- `update_join_mysql`
 
 
 ---

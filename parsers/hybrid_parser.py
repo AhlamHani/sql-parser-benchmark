@@ -30,6 +30,20 @@ class HybridParser:
         
         return sorted(list(filtered))
     
+    def extract_columns(self, query):
+        # Get results from parsers that support column extraction
+        sqlglot_columns = self._extract_columns_sqlglot(query)
+        metadata_columns = self._extract_columns_sql_metadata(query)
+        
+        candidates = set()
+        candidates.update(sqlglot_columns)
+        candidates.update(metadata_columns)
+        
+        # Filter using consensus
+        filtered = self._filter_column_noise(candidates, sqlglot_columns, metadata_columns)
+        
+        return sorted(list(filtered))
+    
     def _extract_sqlglot(self, query):
         """Extract using sqlglot."""
         tables = set()
@@ -116,6 +130,31 @@ class HybridParser:
             pass
         return tables
     
+    def _extract_columns_sqlglot(self, query):
+        """Extract columns using sqlglot."""
+        columns = set()
+        try:
+            parsed = sqlglot.parse_one(query, read=self.engine)
+            for col in parsed.find_all(sqlglot.exp.Column):
+                if col.name:
+                    columns.add(col.name)
+        except:
+            pass
+        return columns
+    
+    def _extract_columns_sql_metadata(self, query):
+        """Extract columns using sql_metadata."""
+        columns = set()
+        try:
+            parser = SQLMetadataParser(query)
+            for col in parser.columns:
+                # Remove table qualification
+                parts = col.split('.')
+                columns.add(parts[-1])
+        except:
+            pass
+        return columns
+    
     def _extract_aliases(self, query):
         """Extract table aliases using sqlglot AST."""
         aliases = set()
@@ -177,6 +216,28 @@ class HybridParser:
             # If only 1 parser found it, trust sqlglot
             if found_by == 1 and t in sqlglot_tables:
                 filtered.add(t)
+                continue
+        
+        return filtered
+    
+    def _filter_column_noise(self, candidates, sqlglot_columns, metadata_columns):
+        """Filter columns using parser consensus."""
+        filtered = set()
+        for col in candidates:
+            if len(col) == 0:
+                continue
+            
+            # Parser consensus: count how many parsers found it
+            found_by = sum([col in sqlglot_columns, col in metadata_columns])
+            
+            # If both parsers agree, it's real
+            if found_by >= 2:
+                filtered.add(col)
+                continue
+            
+            # If only 1 parser found it, trust sqlglot
+            if found_by == 1 and col in sqlglot_columns:
+                filtered.add(col)
                 continue
         
         return filtered
