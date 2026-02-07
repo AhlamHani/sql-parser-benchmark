@@ -1,6 +1,14 @@
 # SQL Parser Benchmark Results
 
-**Last Updated**: 2026-02-07 12:41:02 UTC
+**Last Updated**: 2026-02-07 12:50:10 UTC
+
+## Library Versions
+
+| Library | Version |
+|---------|----------|
+| sqlglot | 28.10.0 |
+| sql-metadata | 2.19.0 |
+| sqlparse | 0.5.5 |
 
 ## Overall Accuracy
 
