@@ -12,18 +12,18 @@
 
 | Parser | Overall | MySQL | PostgreSQL | Failures |
 |--------|---------|-------|------------|----------|
-| **hybrid** | **37/37 (100.0%)** | 19/19 (100.0%) | 18/18 (100.0%) | 0 |
-| **sqlglot** | **30/37 (81.1%)** | 15/19 (78.9%) | 15/18 (83.3%) | 7 |
-| **sql_metadata** | **22/37 (59.5%)** | 12/19 (63.2%) | 10/18 (55.6%) | 15 |
-| **sqlparse** | **18/37 (48.6%)** | 9/19 (47.4%) | 9/18 (50.0%) | 19 |
+| **hybrid** | **38/38 (100.0%)** | 19/19 (100.0%) | 19/19 (100.0%) | 0 |
+| **sqlglot** | **30/38 (78.9%)** | 15/19 (78.9%) | 15/19 (78.9%) | 8 |
+| **sql_metadata** | **22/38 (57.9%)** | 12/19 (63.2%) | 10/19 (52.6%) | 16 |
+| **sqlparse** | **18/38 (47.4%)** | 9/19 (47.4%) | 9/19 (47.4%) | 20 |
 
 ## Column Extraction Accuracy
 
 | Parser | Overall | Failures |
 |--------|---------|----------|
-| **hybrid** | **28/37 (75.7%)** | 9 |
-| **sql_metadata** | **26/37 (70.3%)** | 11 |
-| **sqlglot** | **23/37 (62.2%)** | 14 |
+| **hybrid** | **29/38 (76.3%)** | 9 |
+| **sql_metadata** | **26/38 (68.4%)** | 12 |
+| **sqlglot** | **24/38 (63.2%)** | 14 |
 
 ## Detailed Failures
 
@@ -33,6 +33,7 @@
 
 - `alter_modify_column_mysql`
 - `alter_type_postgres_postgres`
+- `create_gin_index_concurrently_postgres`
 - `create_index_algorithm_mysql`
 - `create_index_with_where_postgres`
 - `create_table_with_constraints_mysql`
@@ -49,6 +50,7 @@
 - `alter_modify_column_mysql`
 - `alter_multiple_columns_mysql`
 - `alter_with_fk_not_valid_postgres`
+- `create_gin_index_concurrently_postgres`
 - `create_index_algorithm_mysql`
 - `create_index_with_where_postgres`
 - `create_simple_index_postgres`
@@ -62,6 +64,7 @@
 - `alter_add_foreign_key_mysql`
 - `alter_add_foreign_key_postgres`
 - `alter_with_fk_not_valid_postgres`
+- `create_gin_index_concurrently_postgres`
 - `create_index_algorithm_mysql`
 - `create_index_with_where_postgres`
 - `create_simple_index_postgres`
@@ -98,6 +101,7 @@
 - `alter_drop_column_mysql`
 - `alter_drop_column_postgres`
 - `alter_type_postgres_postgres`
+- `create_gin_index_concurrently_postgres`
 - `create_index_with_where_postgres`
 - `create_table_with_constraints_mysql`
 - `delete_with_row_number_mysql`
