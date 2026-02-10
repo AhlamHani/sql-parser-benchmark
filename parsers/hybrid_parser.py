@@ -216,12 +216,14 @@ class HybridParser:
             'FIRST', 'LAST', 'BEFORE', 'COLUMN', 'COLUMNS', 'VALUES', 'VALUE',
         }
         
-        opclasses = {'text_pattern_ops', 'varchar_pattern_ops', 'bpchar_pattern_ops'}
-        
         filtered = set()
         for t in candidates:
-            # Skip keywords and operator classes
-            if t.upper() in keywords or t in opclasses:
+            # Skip keywords
+            if t.upper() in keywords:
+                continue
+            
+            # Skip operator classes (pattern: *_ops or *_pattern_ops)
+            if t.endswith('_ops') or t.endswith('_pattern_ops'):
                 continue
             if ' ' in t or t.upper().startswith('IF '):
                 continue
