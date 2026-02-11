@@ -102,10 +102,6 @@ class HybridParser:
             for t in parsed.find_all(sqlglot.exp.Table):
                 if t.name:
                     tables.add(t.name)
-                if hasattr(t, 'db') and t.db:
-                    tables.add(t.db)
-                if hasattr(t, 'catalog') and t.catalog:
-                    tables.add(t.catalog)
         except:
             pass
         return tables
