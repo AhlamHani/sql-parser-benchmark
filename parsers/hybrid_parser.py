@@ -96,7 +96,10 @@ class HybridParser:
             return tables
 
         if parsed.key.upper() == "CREATE":
-            if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "TABLE":
+            if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() in ("TABLE", "TYPE"):
+                # CREATE TYPE ... AS ENUM defines a type, not a table; sqlglot
+                # wraps the type name in a Table node under Create since it has
+                # no dedicated ENUM grammar, so it must be excluded here.
                 return tables
             if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "INDEX":
                 for idx in parsed.find_all(sqlglot.exp.Index):

@@ -5,25 +5,25 @@
 | Library | Version |
 |---------|----------|
 | sqlglot | 29.0.1 |
-| sql-metadata | 2.19.0 |
+| sql-metadata | 2.20.0 |
 | sqlparse | 0.5.5 |
 
 ## Table Extraction Accuracy
 
 | Parser | Overall | MySQL | PostgreSQL | Failures |
 |--------|---------|-------|------------|----------|
-| **hybrid** | **43/43 (100.0%)** | 23/23 (100.0%) | 20/20 (100.0%) | 0 |
-| **sqlglot** | **31/43 (72.1%)** | 16/23 (69.6%) | 15/20 (75.0%) | 12 |
-| **sql_metadata** | **27/43 (62.8%)** | 17/23 (73.9%) | 10/20 (50.0%) | 16 |
-| **sqlparse** | **20/43 (46.5%)** | 11/23 (47.8%) | 9/20 (45.0%) | 23 |
+| **hybrid** | **44/44 (100.0%)** | 23/23 (100.0%) | 21/21 (100.0%) | 0 |
+| **sqlglot** | **32/44 (72.7%)** | 16/23 (69.6%) | 16/21 (76.2%) | 12 |
+| **sql_metadata** | **27/44 (61.4%)** | 17/23 (73.9%) | 10/21 (47.6%) | 17 |
+| **sqlparse** | **20/44 (45.5%)** | 11/23 (47.8%) | 9/21 (42.9%) | 24 |
 
 ## Column Extraction Accuracy
 
 | Parser | Overall | Failures |
 |--------|---------|----------|
-| **hybrid** | **31/43 (72.1%)** | 12 |
-| **sql_metadata** | **30/43 (69.8%)** | 13 |
-| **sqlglot** | **25/43 (58.1%)** | 18 |
+| **hybrid** | **32/44 (72.7%)** | 12 |
+| **sql_metadata** | **30/44 (68.2%)** | 14 |
+| **sqlglot** | **26/44 (59.1%)** | 18 |
 
 ## Detailed Failures
 
@@ -60,6 +60,7 @@
 - `create_index_with_where_postgres`
 - `create_simple_index_postgres`
 - `create_table_with_constraints_mysql`
+- `create_table_with_enum_and_index_postgres`
 - `create_unique_index_with_where_postgres`
 - `delete_with_using_postgres`
 
@@ -76,6 +77,7 @@
 - `create_index_with_where_postgres`
 - `create_simple_index_postgres`
 - `create_table_with_constraints_mysql`
+- `create_table_with_enum_and_index_postgres`
 - `create_unique_index_with_where_postgres`
 - `delete_with_force_index_mysql`
 - `delete_with_row_number_mysql`
@@ -115,6 +117,7 @@
 - `create_gin_index_concurrently_postgres`
 - `create_index_with_where_postgres`
 - `create_table_with_constraints_mysql`
+- `create_table_with_enum_and_index_postgres`
 - `delete_with_row_number_mysql`
 - `delete_with_using_postgres`
 - `insert_select_join_mysql`
