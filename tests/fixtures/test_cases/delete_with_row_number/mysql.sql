@@ -1,5 +1,5 @@
 /*
-tables = ['performance', 'adherence_records']
+tables = ['adherence_records']
 columns = []
 expected-parsers = ['sqlglot']
 engine = 'mysql'

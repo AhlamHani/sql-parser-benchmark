@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh search *)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)",
+      "Bash(cd /Users/ahlam.alhomaidat/workspace/careem/storage-shared-workflows *)",
+      "Read(//Users/ahlam.alhomaidat/workspace/careem/storage-shared-workflows/**)"
+    ]
+  }
+}

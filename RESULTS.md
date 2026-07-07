@@ -4,7 +4,7 @@
 
 | Library | Version |
 |---------|----------|
-| sqlglot | 28.10.0 |
+| sqlglot | 29.0.1 |
 | sql-metadata | 2.19.0 |
 | sqlparse | 0.5.5 |
 
@@ -12,30 +12,30 @@
 
 | Parser | Overall | MySQL | PostgreSQL | Failures |
 |--------|---------|-------|------------|----------|
-| **hybrid** | **37/38 (97.4%)** | 18/19 (94.7%) | 19/19 (100.0%) | 1 |
-| **sqlglot** | **30/38 (78.9%)** | 15/19 (78.9%) | 15/19 (78.9%) | 8 |
-| **sql_metadata** | **22/38 (57.9%)** | 12/19 (63.2%) | 10/19 (52.6%) | 16 |
-| **sqlparse** | **18/38 (47.4%)** | 9/19 (47.4%) | 9/19 (47.4%) | 20 |
+| **hybrid** | **43/43 (100.0%)** | 23/23 (100.0%) | 20/20 (100.0%) | 0 |
+| **sqlglot** | **31/43 (72.1%)** | 16/23 (69.6%) | 15/20 (75.0%) | 12 |
+| **sql_metadata** | **27/43 (62.8%)** | 17/23 (73.9%) | 10/20 (50.0%) | 16 |
+| **sqlparse** | **20/43 (46.5%)** | 11/23 (47.8%) | 9/20 (45.0%) | 23 |
 
 ## Column Extraction Accuracy
 
 | Parser | Overall | Failures |
 |--------|---------|----------|
-| **hybrid** | **29/38 (76.3%)** | 9 |
-| **sql_metadata** | **26/38 (68.4%)** | 12 |
-| **sqlglot** | **24/38 (63.2%)** | 14 |
+| **hybrid** | **31/43 (72.1%)** | 12 |
+| **sql_metadata** | **30/43 (69.8%)** | 13 |
+| **sqlglot** | **25/43 (58.1%)** | 18 |
 
 ## Detailed Failures
 
 ### Table Extraction
 
-#### hybrid
-
-- `delete_with_row_number_mysql`
-
 #### sqlglot
 
+- `alter_drop_add_index_mysql`
+- `alter_drop_add_index_postgres`
+- `alter_drop_index_column_name_clash_mysql`
 - `alter_modify_column_mysql`
+- `alter_modify_drop_add_unique_index_mysql`
 - `alter_type_postgres_postgres`
 - `create_gin_index_concurrently_postgres`
 - `create_index_algorithm_mysql`
@@ -51,6 +51,7 @@
 - `alter_add_columns_postgres_postgres`
 - `alter_add_foreign_key_mysql`
 - `alter_add_foreign_key_postgres`
+- `alter_drop_add_index_postgres`
 - `alter_modify_column_mysql`
 - `alter_multiple_columns_mysql`
 - `alter_with_fk_not_valid_postgres`
@@ -60,13 +61,15 @@
 - `create_simple_index_postgres`
 - `create_table_with_constraints_mysql`
 - `create_unique_index_with_where_postgres`
-- `delete_with_row_number_mysql`
 - `delete_with_using_postgres`
 
 #### sqlparse
 
 - `alter_add_foreign_key_mysql`
 - `alter_add_foreign_key_postgres`
+- `alter_drop_add_index_mysql`
+- `alter_drop_add_index_postgres`
+- `alter_modify_drop_add_unique_index_mysql`
 - `alter_with_fk_not_valid_postgres`
 - `create_gin_index_concurrently_postgres`
 - `create_index_algorithm_mysql`
@@ -90,7 +93,10 @@
 
 #### hybrid
 
+- `alter_drop_add_index_mysql`
+- `alter_drop_add_index_postgres`
 - `alter_drop_column_postgres_postgres`
+- `alter_modify_drop_add_unique_index_mysql`
 - `alter_multiple_columns_mysql`
 - `create_unique_index_with_where_postgres`
 - `delete_with_row_number_mysql`
@@ -104,6 +110,7 @@
 
 - `alter_drop_column_mysql`
 - `alter_drop_column_postgres`
+- `alter_modify_drop_add_unique_index_mysql`
 - `alter_type_postgres_postgres`
 - `create_gin_index_concurrently_postgres`
 - `create_index_with_where_postgres`
@@ -120,7 +127,11 @@
 - `alter_add_foreign_key_mysql`
 - `alter_add_foreign_key_postgres`
 - `alter_add_index_mysql`
+- `alter_add_unique_index_backtick_columns_mysql`
+- `alter_drop_add_index_mysql`
+- `alter_drop_add_index_postgres`
 - `alter_drop_column_postgres_postgres`
+- `alter_modify_drop_add_unique_index_mysql`
 - `alter_multiple_columns_mysql`
 - `create_simple_index_postgres`
 - `create_table_with_constraints_mysql`

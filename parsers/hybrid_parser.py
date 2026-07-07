@@ -65,45 +65,60 @@ class HybridParser:
     
     def _extract_sqlglot(self, query):
         """Extract using sqlglot."""
-        tables = set()
         try:
             parsed = sqlglot.parse_one(query, read=self.engine)
-            
-            if parsed.key.upper() == "DROP":
-                if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "INDEX":
-                    return tables
-            
-            if parsed.key.upper() == "ALTER":
-                if hasattr(parsed, 'this') and parsed.this:
-                    tables.add(parsed.this.name)
-                for t in parsed.find_all(sqlglot.exp.Table):
-                    if t.name and t.name != parsed.this.name:
-                        tables.add(t.name)
+            # sqlglot 29.x returns a Block node for multi-statement SQL
+            if parsed.key.upper() == "BLOCK":
+                tables = set()
+                for stmt in parsed.expressions:
+                    tables.update(self._extract_sqlglot_stmt(stmt, stmt.sql(dialect=self.engine)))
                 return tables
-            
-            if parsed.key.upper() == "CREATE":
-                if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "TABLE":
-                    return tables
-                if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "INDEX":
-                    for idx in parsed.find_all(sqlglot.exp.Index):
-                        for t in idx.find_all(sqlglot.exp.Table):
-                            if t.name:
-                                tables.add(t.name)
-                    return tables
-            
-            if parsed.key.upper() == "COMMAND":
-                if 'CREATE' in query.upper() and 'INDEX' in query.upper() and 'ON' in query.upper():
-                    import re
-                    match = re.search(r'\bON\s+([`"]?\w+[`"]?)', query, re.IGNORECASE)
-                    if match:
-                        tables.add(match.group(1).strip('`"'))
-                    return tables
-            
-            for t in parsed.find_all(sqlglot.exp.Table):
-                if t.name:
-                    tables.add(t.name)
+            return self._extract_sqlglot_stmt(parsed, query)
         except:
-            pass
+            return set()
+
+    def _extract_sqlglot_stmt(self, parsed, query):
+        """Extract tables from a single parsed statement."""
+        tables = set()
+
+        if parsed.key.upper() == "DROP":
+            if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "INDEX":
+                return tables
+
+        if parsed.key.upper() == "ALTER":
+            if hasattr(parsed, 'this') and parsed.this:
+                tables.add(parsed.this.name)
+            for t in parsed.find_all(sqlglot.exp.Table):
+                if t.name and t.name != parsed.this.name:
+                    # Skip index names: sqlglot represents them as Table nodes under Drop
+                    if not isinstance(t.parent, sqlglot.exp.Drop):
+                        tables.add(t.name)
+            return tables
+
+        if parsed.key.upper() == "CREATE":
+            if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "TABLE":
+                return tables
+            if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "INDEX":
+                for idx in parsed.find_all(sqlglot.exp.Index):
+                    for t in idx.find_all(sqlglot.exp.Table):
+                        if t.name:
+                            tables.add(t.name)
+                return tables
+
+        if parsed.key.upper() == "COMMAND":
+            if 'CREATE' in query.upper() and 'INDEX' in query.upper() and 'ON' in query.upper():
+                import re
+                match = re.search(r'\bON\s+([`"]?\w+[`"]?)', query, re.IGNORECASE)
+                if match:
+                    tables.add(match.group(1).strip('`"'))
+                return tables
+
+        for t in parsed.find_all(sqlglot.exp.Table):
+            if t.name:
+                # Skip index names: sqlglot represents them as Table nodes under Drop
+                if not isinstance(t.parent, sqlglot.exp.Drop):
+                    tables.add(t.name)
+
         return tables
     
     def _extract_sql_metadata(self, query):
