@@ -5,25 +5,25 @@
 | Library | Version |
 |---------|----------|
 | sqlglot | 29.0.1 |
-| sql-metadata | 2.20.0 |
+| sql-metadata | 2.19.0 |
 | sqlparse | 0.5.5 |
 
 ## Table Extraction Accuracy
 
 | Parser | Overall | MySQL | PostgreSQL | Failures |
 |--------|---------|-------|------------|----------|
-| **hybrid** | **44/44 (100.0%)** | 23/23 (100.0%) | 21/21 (100.0%) | 0 |
-| **sqlglot** | **32/44 (72.7%)** | 16/23 (69.6%) | 16/21 (76.2%) | 12 |
-| **sql_metadata** | **27/44 (61.4%)** | 17/23 (73.9%) | 10/21 (47.6%) | 17 |
-| **sqlparse** | **20/44 (45.5%)** | 11/23 (47.8%) | 9/21 (42.9%) | 24 |
+| **hybrid** | **46/46 (100.0%)** | 23/23 (100.0%) | 23/23 (100.0%) | 0 |
+| **sqlglot** | **34/46 (73.9%)** | 16/23 (69.6%) | 18/23 (78.3%) | 12 |
+| **sql_metadata** | **28/46 (60.9%)** | 17/23 (73.9%) | 11/23 (47.8%) | 18 |
+| **sqlparse** | **21/46 (45.7%)** | 11/23 (47.8%) | 10/23 (43.5%) | 25 |
 
 ## Column Extraction Accuracy
 
 | Parser | Overall | Failures |
 |--------|---------|----------|
-| **hybrid** | **32/44 (72.7%)** | 12 |
-| **sql_metadata** | **30/44 (68.2%)** | 14 |
-| **sqlglot** | **26/44 (59.1%)** | 18 |
+| **hybrid** | **34/46 (73.9%)** | 12 |
+| **sql_metadata** | **31/46 (67.4%)** | 15 |
+| **sqlglot** | **28/46 (60.9%)** | 18 |
 
 ## Detailed Failures
 
@@ -59,6 +59,7 @@
 - `create_index_algorithm_mysql`
 - `create_index_with_where_postgres`
 - `create_simple_index_postgres`
+- `create_table_in_do_block_then_index_postgres`
 - `create_table_with_constraints_mysql`
 - `create_table_with_enum_and_index_postgres`
 - `create_unique_index_with_where_postgres`
@@ -76,6 +77,7 @@
 - `create_index_algorithm_mysql`
 - `create_index_with_where_postgres`
 - `create_simple_index_postgres`
+- `create_table_in_do_block_then_index_postgres`
 - `create_table_with_constraints_mysql`
 - `create_table_with_enum_and_index_postgres`
 - `create_unique_index_with_where_postgres`
@@ -116,6 +118,7 @@
 - `alter_type_postgres_postgres`
 - `create_gin_index_concurrently_postgres`
 - `create_index_with_where_postgres`
+- `create_table_in_do_block_then_index_postgres`
 - `create_table_with_constraints_mysql`
 - `create_table_with_enum_and_index_postgres`
 - `delete_with_row_number_mysql`

@@ -27,9 +27,25 @@ class HybridParser:
         
         # Filter using parser consensus and AST analysis
         filtered = self._filter_noise(candidates, sqlglot_tables, metadata_tables, sqlparse_tables, aliases)
-        
+
         return sorted(list(filtered))
-    
+
+    def extract_table_schemas(self, query):
+        """Maps table name -> schema, for tables the query itself qualifies
+        with an explicit schema (e.g. `partman.part_config`) rather than
+        relying on the migration's own declared schema. A table referenced
+        without a schema qualifier is omitted; callers should fall back to
+        the migration's schema for those."""
+        schemas = {}
+        try:
+            parsed = sqlglot.parse_one(query, read=self.engine)
+            for t in parsed.find_all(sqlglot.exp.Table):
+                if t.name and t.db:
+                    schemas[t.name] = t.db
+        except Exception:
+            pass
+        return schemas
+
     def extract_columns(self, query):
         # Get results from parsers that support column extraction
         sqlglot_columns = self._extract_columns_sqlglot(query)
@@ -90,16 +106,18 @@ class HybridParser:
                 tables.add(parsed.this.name)
             for t in parsed.find_all(sqlglot.exp.Table):
                 if t.name and t.name != parsed.this.name:
-                    # Skip index names: sqlglot represents them as Table nodes under Drop
+                    # Skip constraint/index names: sqlglot wraps DROP CONSTRAINT
+                    # and DROP INDEX targets nested in an ALTER action list in a
+                    # Table node too, which would otherwise leak as a bogus table.
                     if not isinstance(t.parent, sqlglot.exp.Drop):
                         tables.add(t.name)
             return tables
 
         if parsed.key.upper() == "CREATE":
             if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() in ("TABLE", "TYPE"):
-                # CREATE TYPE ... AS ENUM defines a type, not a table; sqlglot
-                # wraps the type name in a Table node under Create since it has
-                # no dedicated ENUM grammar, so it must be excluded here.
+                # On sqlglot>=30, `CREATE TYPE ... AS ENUM` parses with kind=TYPE
+                # and wraps the type name in a Table node, which would otherwise
+                # leak into extract_tables() as a bogus table.
                 return tables
             if hasattr(parsed, 'kind') and parsed.kind and parsed.kind.upper() == "INDEX":
                 for idx in parsed.find_all(sqlglot.exp.Index):
